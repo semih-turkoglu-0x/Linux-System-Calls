@@ -1,0 +1,3 @@
+le premier print va donc afficher une fois 0 et une fois le pid du premier fils, et le deuxième printf est exécuté 3 fois avec une fois où il va afficher 0 et une autre où il affichera le pid du 2ème fils, ainsi que du 3ème, celui créer par le premier fils!
+en plus du père, il y aura 3 autres processus.
+en effet, ici comme on ne protège pas l'exécution en séparant les processus parent et fils, le deuxième fork va s'exécuter 2 fois.

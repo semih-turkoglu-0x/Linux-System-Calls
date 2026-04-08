@@ -1,0 +1,8 @@
+il faudrait peut être vider le buffer? pour qu'il ne reste plus rien et que donc on ait pas d'incohérence dans stdout
+
+
+
+Réponse : en résumé, le buffer n'est pas vidé. Quand on fait le fork(), le buffer est aussi copié! Le printf vide le buffer si on et un \n. Sinon non.
+Une bonne pratique est donc d'utiliser systématiquement des \n lorsque l'on utilise des printf().
+
+Pourquoi est-ce qu'il n'y a pas ce problème dans write()? il n'y a pas de bufferisation dans le write(). On écrit directement dans le disque. 
