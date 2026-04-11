@@ -1,6 +1,12 @@
 # Linux-System-Calls
 Repository for the course LAS
 
+# Very Useful Commands
+
+convert spaces into tabs in a Makefile:
+
+`sed -i 's/^    /\t/g' Makefile`
+
 # Notes on System Calls
 
 To get more information on a particular system call : `man 2 syscall`.

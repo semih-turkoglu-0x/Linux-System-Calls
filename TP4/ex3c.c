@@ -11,9 +11,13 @@ int main () {
         exit(1);
     }
     if (childId != 0) {
-        wait(NULL);
+        int exitStatus;
+        wait(&exitStatus);
         printf("1 2 3\n");
+        printf("%d\n", WEXITSTATUS(exitStatus));
     } else {
         printf("4 5 6\n");
+        exit(23);
     }
 }
+//options : WEXITSTATUS
