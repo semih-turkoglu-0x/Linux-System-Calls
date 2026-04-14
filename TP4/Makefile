@@ -34,4 +34,5 @@ utils.o : utils.c utils.h
 
 clean :
 	rm -f *.o
+	rm -f *.sh
 	rm -f ex1a ex1b ex1c ex1d ex3a ex3b ex3c ex3d ex4

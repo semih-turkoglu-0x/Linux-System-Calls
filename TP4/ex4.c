@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/wait.h>
+#include <string.h>
 #include "utils.h"
 
 #define MAX 20
@@ -12,7 +13,7 @@ int main (int argc, char** argv) {
     char bufRd[MAX];
     int nbChar = sread(0, bufRd, MAX);
     bufRd[nbChar - 1] = '\0';
-    sopen(bufRd, O_RDWR |  O_CREAT | O_TRUNC, 0744);
+    int fd = sopen(bufRd, O_RDWR |  O_CREAT | O_TRUNC, 0744);
 
     int childPid = fork();
     int childStatus;
@@ -29,6 +30,8 @@ int main (int argc, char** argv) {
         exit(EXIT_FAILURE);
         } else {
         waitpid(childPid, &childStatus, 0);
-        exit(EXIT_SUCCESS); 
+        char* shBg = "#!/bin/bash";
+        write(fd, shBg, strlen(shBg));
+        exit(EXIT_SUCCESS);
     }
 }
