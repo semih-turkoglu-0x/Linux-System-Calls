@@ -6,32 +6,51 @@
 #include <string.h>
 #include "utils.h"
 
-#define MAX 20
+#define MAX_FILE 20
+#define MAX_LINE 50
 
 int main (int argc, char** argv) {
     printf("saisissez le nom du fichier :\n");
-    char bufRd[MAX];
-    int nbChar = sread(0, bufRd, MAX);
+    char bufRd[MAX_FILE];
+    int nbChar = sread(0, bufRd, MAX_FILE);
+    //putting \0 at the end of the string so that the program recognizes it
     bufRd[nbChar - 1] = '\0';
     int fd = sopen(bufRd, O_RDWR |  O_CREAT | O_TRUNC, 0744);
 
-    int childPid = fork();
-    int childStatus;
+    //create the first childProcess that will execute the ls -l command
+    int child1Pid = fork();
+    int child1Status;
 
-    if (childPid == -1) {
+    if (child1Pid == -1) {
         perror("fork error\n");
         exit(EXIT_FAILURE);
     }
 
-    if (!childPid) {
+    if (!child1Pid) {
         char* args[] = {"ls", "-l", NULL};
         execv("/bin/ls", args);
         perror("error execv\n");
         exit(EXIT_FAILURE);
         } else {
-        waitpid(childPid, &childStatus, 0);
-        char* shBg = "#!/bin/bash";
-        write(fd, shBg, strlen(shBg));
-        exit(EXIT_SUCCESS);
+            //waiting for the child to execute ls -l
+            waitpid(child1Pid, &child1Status, 0);
+            //write the shebang in the newly created script
+            char* shBg = "#!/bin/bash\n";
+            write(fd, shBg, strlen(shBg));
+
+            printf("enter the lines of your script. Ctrl-D to finish.\n");
+
+            char bufScript[MAX_LINE];
+            int nbCharScript = read(0, bufScript, MAX_LINE);
+            while (nbCharScript > 0) {
+                if (bufScript[nbCharScript-1] == '\n') {
+                    write(fd, bufScript, strlen(bufScript));
+                } else {
+                    perror("error : line is too big\n");
+                    exit(EXIT_FAILURE);
+                }
+                nbCharScript = read(0, bufScript, MAX_LINE);
+            }
+            exit(EXIT_SUCCESS);
     }
 }
