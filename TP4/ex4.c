@@ -29,6 +29,7 @@ int main (int argc, char** argv) {
     //create the first childProcess that will execute the ls -l command
     int child1Pid = fork();
     int child1Status;
+    int child2Status;
 
     if (child1Pid == -1) {
         perror("fork error\n");
@@ -54,7 +55,7 @@ int main (int argc, char** argv) {
             int nbCharScript = read(0, bufScript, MAX_LINE);
             while (nbCharScript > 0) {
                 if (bufScript[nbCharScript-1] == '\n') {
-                    write(fd, bufScript, strlen(bufScript));
+                    write(fd, bufScript, nbCharScript);
                 } else {
                     perror("error : line is too big");
                     clearStdin();
@@ -70,10 +71,18 @@ int main (int argc, char** argv) {
             if (!child2Pid) {
                 close (fd);
                 char* args[] = {"cat", bufRd, NULL};
-                printf("\n\nPrinting the content of the script before executing it\n");
+                printf("\n*********************************************\nPrinting the content of the script before executing it\n");
                 execv("/bin/cat", args);
                 perror("error execv");
                 exit(EXIT_FAILURE);
+            } else {
+                waitpid(child2Pid, &child2Status, 0);
+                close(fd);
+                char newString[MAX_FILE + 3];
+                sprintf(newString, "./%s", bufRd);
+                char* args[] = {newString, NULL};
+                execv(newString, args);
+                perror("error exec");
             }
             exit(EXIT_SUCCESS);
     }
