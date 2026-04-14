@@ -9,6 +9,15 @@
 #define MAX_FILE 20
 #define MAX_LINE 50
 
+void clearStdin() {
+    char bufLeft[MAX_LINE];
+    int nbCharLeft = read(0, bufLeft, MAX_LINE);
+    while (nbCharLeft > 0 && bufLeft[nbCharLeft-1] != '\n') {
+        read(0, bufLeft, MAX_LINE);
+    }
+    printf("stdin was emptied\n");
+}
+
 int main (int argc, char** argv) {
     printf("saisissez le nom du fichier :\n");
     char bufRd[MAX_FILE];
@@ -27,6 +36,7 @@ int main (int argc, char** argv) {
     }
 
     if (!child1Pid) {
+        close (fd);
         char* args[] = {"ls", "-l", NULL};
         execv("/bin/ls", args);
         perror("error execv\n");
@@ -46,7 +56,8 @@ int main (int argc, char** argv) {
                 if (bufScript[nbCharScript-1] == '\n') {
                     write(fd, bufScript, strlen(bufScript));
                 } else {
-                    perror("error : line is too big\n");
+                    perror("error : line is too big");
+                    clearStdin();
                     exit(EXIT_FAILURE);
                 }
                 nbCharScript = read(0, bufScript, MAX_LINE);
