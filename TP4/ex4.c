@@ -39,7 +39,7 @@ int main (int argc, char** argv) {
         close (fd);
         char* args[] = {"ls", "-l", NULL};
         execv("/bin/ls", args);
-        perror("error execv\n");
+        perror("error execv");
         exit(EXIT_FAILURE);
         } else {
             //waiting for the child to execute ls -l
@@ -48,7 +48,7 @@ int main (int argc, char** argv) {
             char* shBg = "#!/bin/bash\n";
             write(fd, shBg, strlen(shBg));
 
-            printf("enter the lines of your script. Ctrl-D to finish.\n");
+            printf("\n\nenter the lines of your script. Ctrl-D to finish.\n");
 
             char bufScript[MAX_LINE];
             int nbCharScript = read(0, bufScript, MAX_LINE);
@@ -61,6 +61,19 @@ int main (int argc, char** argv) {
                     exit(EXIT_FAILURE);
                 }
                 nbCharScript = read(0, bufScript, MAX_LINE);
+            }
+
+            int child2Pid = fork();
+
+            if (child2Pid == -1) perror("fork2 error");
+
+            if (!child2Pid) {
+                close (fd);
+                char* args[] = {"cat", bufRd, NULL};
+                printf("\n\nPrinting the content of the script before executing it\n");
+                execv("/bin/cat", args);
+                perror("error execv");
+                exit(EXIT_FAILURE);
             }
             exit(EXIT_SUCCESS);
     }
