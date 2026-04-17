@@ -13,8 +13,11 @@ void sigusr1_handler (int sig) {
 int main () {
     struct sigaction action = {0};
     action.sa_handler = sigusr1_handler;
+    int ret = sigfillset(&action.sa_mask);
+    checkNeg(ret, "sigfillset error");
+    action.sa_flags = 0;
     
-    int ret = sigaction(SIGUSR1, &action, NULL);
+    ret = sigaction(SIGUSR1, &action, NULL);
     checkNeg(ret, "error sigaction");
 
     pid_t childPid = sfork();
@@ -24,6 +27,7 @@ int main () {
         swait(NULL);
         exit(EXIT_SUCCESS);
     } else {
+        pause();
         exit(0);
     }
 }
