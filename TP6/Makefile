@@ -16,6 +16,9 @@ ex4_1c : ex4_1c.o utils.o
 timer : ex4_2.o utils.o
 	cc $(CFLAGS) -o timer ex4_2.o utils.o
 
+ex4_3 : ex4_3.o
+	cc $(CFLAGS) -o ex4_3 ex4_3.o
+
 utils : utils.c utils.h
 	cc $(CFLAGS) -o utils.o
 
