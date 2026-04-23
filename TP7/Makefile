@@ -1,6 +1,6 @@
 CFLAGS=-std=c17 -pedantic -Wvla -Werror -Wall -D_DEFAULT_SOURCE -g
 
-ALL = radar dashboard famille1 famille2 locks
+ALL = radar dashboard famille1 famille2 locks admin1 distributeur ecran
 all : $(ALL)
 
 radar : radar.o utils.o
@@ -17,6 +17,15 @@ famille2 : famille2.o utils.o
 
 locks : locks.o utils.o
 	cc $(CFLAGS) -o locks locks.o utils.o
+
+admin1 : admin1.o utils.o
+	cc $(CFLAGS) -o admin1 admin1.o utils.o
+
+distributeur : distributeur.o utils.o
+	cc $(CFLAGS) -o distributeur distributeur.o utils.o
+
+ecran: ecran.o utils.o
+	cc $(CFLAGS) -o ecran ecran.o utils.o
 
 utils : utils.c utils.h
 	cc $(CFLAGS) -o utils.o
