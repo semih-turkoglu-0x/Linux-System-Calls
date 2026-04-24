@@ -1,0 +1,4 @@
+http://courslinux.vinci.be/~alegrand/Syllabus_C/index.html
+http://courslinux.vinci.be/~alegrand/Syllabus_C/modules/tableaux.html
+http://courslinux.vinci.be/~alegrand/Syllabus_C/modules/chaines.html
+http://courslinux.vinci.be/~alegrand/Syllabus_C/modules/fichier.html
