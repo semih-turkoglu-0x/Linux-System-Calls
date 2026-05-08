@@ -1,16 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "utils.h"
 #include "inscriptionRequest.h"
 
 void childFunction(void* ffds, void *sfds)
 {
+
     int* ptr1 = ffds;
     int* ptr2 = sfds;
     sclose(ptr1[1]);
     sclose(ptr2[0]);
+
+    int stdoutFd = sdup(STDOUT_FILENO);
+    sdup2(ptr2[1], STDOUT_FILENO);
 
     int nbInscrits = 0;
     InscriptionRequest ir;
@@ -23,7 +28,16 @@ void childFunction(void* ffds, void *sfds)
     }
         
     sclose(ptr1[0]);
-    swrite(ptr2[1], &nbInscrits, sizeof(int));
+    swrite(STDOUT_FILENO, &nbInscrits, sizeof(int));
+    sdup2(stdoutFd, STDOUT_FILENO);
+    sclose(stdoutFd);
+    char* msg = "Moi, le fils, j'ai fini mon boulot\n";
+    int byteWr;
+    byteWr = write(STDOUT_FILENO, msg, strlen(msg));
+    if (byteWr == -1) {
+        perror("write error");
+        exit(1);
+    }
     sclose(ptr2[1]);
 }
 
