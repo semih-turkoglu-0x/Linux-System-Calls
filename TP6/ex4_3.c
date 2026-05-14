@@ -45,7 +45,7 @@ int main (int argc, char** argv) {
 
     if (childPid) {
         
-        //arm the signal
+        //init and arm the signal
         struct sigaction action = {0};
         action.sa_handler = sigHandler;
         ret = sigfillset(&action.sa_mask);
